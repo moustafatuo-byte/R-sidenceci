@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResidenceCI – Trouvez votre logement en Côte d'Ivoire</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #00A86B;
+    --green-dark: #007A4D;
+    --green-light: #E6F7F1;
+    --orange: #FF6B35;
+    --dark: #0F1923;
+    --gray: #64748B;
+    --light: #F8FAFC;
+    --white: #FFFFFF;
+  }
+
+  body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 6%; background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 38px; height: 38px; background: var(--green); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--dark); }
+  .logo-text span { color: var(--green); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--gray); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green); color: white; padding: 10px 22px;
+    border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--green-dark); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0F1923 0%, #1a2d3d 50%, #0d3320 100%);
+    display: flex; align-items: center; padding: 100px 6% 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,107,0.15) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -150px; left: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+  }
+  .hero-content { max-width: 600px; z-index: 2; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,168,107,0.15); border: 1px solid rgba(0,168,107,0.3);
+    color: #4DFFB4; padding: 8px 16px; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 600; margin-bottom: 28px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .badge-dot { width: 6px; height: 6px; background: #4DFFB4; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900;
+    color: white; line-height: 1.15; margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--green); }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 40px; max-width: 480px; }
+
+  /* SEARCH BAR */
+  .search-box {
+    background: white; border-radius: 16px; padding: 8px; display: flex;
+    gap: 8px; align-items: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 540px;
+  }
+  .search-select {
+    border: none; outline: none; padding: 12px 16px; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--dark);
+    background: var(--light); cursor: pointer; font-weight: 500;
+  }
+  .search-input {
+    flex: 1; border: none; outline: none; padding: 12px 16px;
+    font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--dark);
+    background: transparent;
+  }
+  .search-input::placeholder { color: #aaa; }
+  .search-btn {
+    background: var(--green); color: white; border: none; cursor: pointer;
+    padding: 12px 24px; border-radius: 10px; font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
+    transition: background 0.2s; white-space: nowrap;
+  }
+  .search-btn:hover { background: var(--green-dark); }
+
+  .hero-stats { display: flex; gap: 32px; margin-top: 40px; }
+  .stat-item { }
+  .stat-num { font-size: 1.6rem; font-weight: 800; color: white; }
+  .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    max-width: 420px;
+  }
+  .property-card {
+    background: white; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25); transition: transform 0.3s;
+  }
+  .property-card:hover { transform: translateY(-6px); }
+  .property-card.featured { grid-column: span 2; }
+  .card-img {
+    height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; position: relative;
+  }
+  .card-img.c1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .card-img.c2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .card-img.c3 { background: linear-gradient(135deg, #4facfe, #00f2fe); height: 100px; }
+  .card-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--orange); color: white; padding: 4px 10px;
+    border-radius: 20px; font-size: 0.7rem; font-weight: 700;
+  }
+  .card-badge.meuble { background: var(--green); }
+  .card-body { padding: 14px; }
+  .card-title { font-size: 0.85rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .card-location { font-size: 0.75rem; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+  .card-price { font-size: 0.9rem; font-weight: 800; color: var(--green); margin-top: 8px; }
+  .card-price span { font-size: 0.7rem; color: var(--gray); font-weight: 400; }
+
+  /* WAVE */
+  .wave { background: var(--dark); line-height: 0; }
+  .wave svg { display: block; }
+
+  /* FEATURES */
+  .features { padding: 80px 6%; background: var(--light); }
+  .section-label {
+    text-align: center; color: var(--green); font-weight: 700;
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .section-title { text-align: center; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; margin-bottom: 12px; }
+  .section-sub { text-align: center; color: var(--gray); max-width: 520px; margin: 0 auto 60px; line-height: 1.6; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+  .feature-card {
+    background: white; border-radius: 20px; padding: 32px 28px;
+    border: 1px solid rgba(0,0,0,0.06); transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--green); transform: scaleX(0); transition: transform 0.3s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+  .feature-card:hover::before { transform: scaleX(1); }
+  .feature-icon {
+    width: 56px; height: 56px; background: var(--green-light); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 20px;
+  }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+  .feature-card p { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
+
+  /* HOW IT WORKS */
+  .how { padding: 80px 6%; background: white; }
+  .steps { display: flex; justify-content: center; gap: 0; max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
+  .step { text-align: center; flex: 1; min-width: 180px; padding: 20px; position: relative; }
+  .step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -10px; top: 32px;
+    font-size: 1.4rem; color: var(--green); font-weight: 700;
+  }
+  .step-num {
+    width: 60px; height: 60px; background: var(--green); color: white;
+    border-radius: 50%; font-size: 1.3rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  }
+  .step h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 0.82rem; color: var(--gray); line-height: 1.5; }
+
+  /* RESIDENCES */
+  .residences { padding: 80px 6%; background: var(--light); }
+  .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-top: 48px; }
+  .listing-card {
+    background: white; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s;
+  }
+  .listing-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+  .listing-img {
+    height: 200px; display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; position: relative;
+  }
+  .listing-img.l1 { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+  .listing-img.l2 { background: linear-gradient(135deg, #d299c2, #fef9d7); }
+  .listing-img.l3 { background: linear-gradient(135deg, #89f7fe, #66a6ff); }
+  .listing-badges { position: absolute; top: 14px; left: 14px; display: flex; gap: 8px; }
+  .tag {
+    padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+    backdrop-filter: blur(8px);
+  }
+  .tag-type { background: rgba(0,0,0,0.5); color: white; }
+  .tag-avail { background: rgba(0,168,107,0.9); color: white; }
+  .listing-body { padding: 20px; }
+  .listing-name { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+  .listing-loc { font-size: 0.82rem; color: var(--gray); margin-bottom: 12px; }
+  .listing-amenities { display: flex; gap: 16px; margin-bottom: 16px; }
+  .amenity { font-size: 0.78rem; color: var(--gray); display: flex; align-items: center; gap: 5px; }
+  .listing-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f0f0f0; padding-top: 14px; }
+  .listing-price { font-size: 1rem; font-weight: 800; color: var(--green); }
+  .listing-price span { font-size: 0.75rem; font-weight: 400; color: var(--gray); }
+  .book-btn {
+    background: var(--green-light); color: var(--green); border: none; cursor: pointer;
+    padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.82rem;
+    font-family: 'Inter', sans-serif; transition: all 0.2s;
+  }
+  .book-btn:hover { background: var(--green); color: white; }
+
+  /* CTA */
+  .cta-section {
+    padding: 80px 6%; background: var(--dark); text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,107,0.12) 0%, transparent 70%);
+  }
+  .cta-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: white; margin-bottom: 16px; z-index:1; position:relative; }
+  .cta-section h2 span { color: var(--green); }
+  .cta-section p { color: rgba(255,255,255,0.6); max-width: 500px; margin: 0 auto 40px; line-height: 1.6; z-index:1; position:relative; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; z-index:1; position:relative; }
+  .btn-primary {
+    background: var(--green); color: white; padding: 16px 32px;
+    border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: background 0.2s; display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.1); color: white; padding: 16px 32px;
+    border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+
+  /* FOOTER */
+  footer {
+    background: #060e15; padding: 40px 6% 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05); flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo .logo-text { color: white; }
+  footer p { color: rgba(255,255,255,0.35); font-size: 0.82rem; }
+
+  /* ── PAGE TABS ── */
+  .page-tabs {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  }
+  .tab-bar {
+    display: flex; background: var(--dark); justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 6%;
+  }
+  .tab-btn {
+    padding: 14px 32px; font-family: 'Inter', sans-serif;
+    font-size: 0.88rem; font-weight: 600; cursor: pointer;
+    border: none; background: none; color: rgba(255,255,255,0.45);
+    border-bottom: 3px solid transparent; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px; margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: white; }
+  .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  /* ── OWNER HERO ── */
+  .owner-hero {
+    min-height: 45vh;
+    background: linear-gradient(135deg, #0F1923 0%, #0d3320 100%);
+    display: flex; align-items: center; padding: 110px 6% 60px;
+    position: relative; overflow: hidden;
+  }
+  .owner-hero::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,107,0.12) 0%, transparent 70%);
+  }
+  .owner-hero-content { max-width: 700px; z-index: 2; }
+  .owner-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+    color: white; line-height: 1.15; margin-bottom: 16px;
+  }
+  .owner-hero h1 span { color: var(--green); }
+  .owner-hero p { font-size: 1rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 520px; }
+  .owner-perks {
+    display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .perk { display: flex; align-items: center; gap: 10px; }
+  .perk-icon {
+    width: 40px; height: 40px; background: rgba(0,168,107,0.15);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .perk-text { font-size: 0.85rem; color: rgba(255,255,255,0.65); font-weight: 500; }
+
+  /* ── OWNER FORM SECTION ── */
+  .owner-form-section { padding: 60px 6%; background: var(--light); }
+  .form-layout {
+    display: grid; grid-template-columns: 1fr 340px; gap: 40px; max-width: 1100px; margin: 0 auto;
+    align-items: start;
+  }
+
+  /* Form card */
+  .form-card {
+    background: white; border-radius: 24px; padding: 40px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.07); border: 1px solid rgba(0,0,0,0.05);
+  }
+  .form-card h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+  .form-card > p { font-size: 0.88rem; color: var(--gray); margin-bottom: 32px; }
+
+  /* Form steps indicator */
+  .form-steps-indicator {
+    display: flex; align-items: center; gap: 0; margin-bottom: 36px;
+  }
+  .fsi-step {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;
+    position: relative;
+  }
+  .fsi-step:not(:last-child)::after {
+    content: ''; position: absolute; top: 15px; left: 60%; right: -40%;
+    height: 2px; background: #e2e8f0; z-index: 0;
+  }
+  .fsi-step.done:not(:last-child)::after { background: var(--green); }
+  .fsi-num {
+    width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0;
+    color: var(--gray); font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; z-index: 1;
+    transition: all 0.3s;
+  }
+  .fsi-step.active .fsi-num { background: var(--green); color: white; }
+  .fsi-step.done .fsi-num { background: var(--green); color: white; }
+  .fsi-label { font-size: 0.7rem; color: var(--gray); font-weight: 500; text-align: center; }
+  .fsi-step.active .fsi-label { color: var(--green); font-weight: 700; }
+
+  /* Form steps content */
+  .form-step-content { display: none; }
+  .form-step-content.active { display: block; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 0.82rem; font-weight: 600;
+    color: var(--dark); margin-bottom: 8px;
+  }
+  .form-group label span { color: var(--green); }
+  .form-control {
+    width: 100%; padding: 12px 16px; border-radius: 12px;
+    border: 1.5px solid #e2e8f0; font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; color: var(--dark); transition: border-color 0.2s;
+    outline: none; background: white;
+  }
+  .form-control:focus { border-color: var(--green); }
+  .form-control::placeholder { color: #bbb; }
+  textarea.form-control { resize: vertical; min-height: 100px; }
+  select.form-control { cursor: pointer; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Photo upload */
+  .photo-upload {
+    border: 2px dashed #e2e8f0; border-radius: 14px; padding: 32px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+    background: var(--light);
+  }
+  .photo-upload:hover { border-color: var(--green); background: var(--green-light); }
+  .photo-upload .upload-icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .photo-upload p { font-size: 0.85rem; color: var(--gray); }
+  .photo-upload strong { color: var(--green); }
+  .photo-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .preview-img {
+    width: 80px; height: 80px; border-radius: 10px;
+    object-fit: cover; border: 2px solid var(--green-light);
+  }
+  .preview-placeholder {
+    width: 80px; height: 80px; border-radius: 10px;
+    background: var(--green-light); display: flex; align-items: center;
+    justify-content: center; font-size: 1.5rem; border: 2px dashed var(--green);
+    cursor: pointer;
+  }
+
+  /* Checkboxes grid */
+  .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .checkbox-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; border-radius: 10px;
+    border: 1.5px solid #e2e8f0; cursor: pointer; transition: all 0.2s;
+    font-size: 0.82rem; font-weight: 500; color: var(--dark);
+  }
+  .checkbox-item:hover { border-color: var(--green); background: var(--green-light); }
+  .checkbox-item input { accent-color: var(--green); width: 15px; height: 15px; }
+  .checkbox-item.checked { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+
+  /* Form navigation buttons */
+  .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #f0f0f0; }
+  .btn-prev {
+    padding: 12px 24px; border-radius: 10px; border: 1.5px solid #e2e8f0;
+    background: white; font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: 0.88rem; cursor: pointer; color: var(--gray); transition: all 0.2s;
+  }
+  .btn-prev:hover { border-color: var(--dark); color: var(--dark); }
+  .btn-next {
+    padding: 12px 28px; border-radius: 10px; border: none;
+    background: var(--green); color: white; font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-next:hover { background: var(--green-dark); }
+  .btn-submit {
+    padding: 14px 32px; border-radius: 12px; border: none;
+    background: var(--green); color: white; font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s;
+    width: 100%; margin-top: 16px;
+  }
+  .btn-submit:hover { background: var(--green-dark); }
+
+  /* SUCCESS state */
+  .form-success {
+    display: none; text-align: center; padding: 40px 20px;
+  }
+  .success-icon { font-size: 4rem; margin-bottom: 16px; }
+  .form-success h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+  .form-success p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; max-width: 360px; margin: 0 auto; }
+
+  /* Sidebar tips */
+  .form-sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .tip-card {
+    background: white; border-radius: 20px; padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
+  }
+  .tip-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+  .tip-item {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+  }
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .tip-item p { font-size: 0.82rem; color: var(--gray); line-height: 1.5; }
+
+  .stats-card {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    border-radius: 20px; padding: 28px; color: white;
+  }
+  .stats-card h4 { font-size: 0.9rem; font-weight: 700; opacity: 0.8; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-row { display: flex; justify-content: space-between; margin-bottom: 16px; }
+  .stat-row:last-child { margin-bottom: 0; }
+  .stat-box { text-align: center; }
+  .stat-box .num { font-size: 1.6rem; font-weight: 900; }
+  .stat-box .lbl { font-size: 0.72rem; opacity: 0.7; margin-top: 2px; }
+
+  /* Owner how-it-works */
+  .owner-how { padding: 60px 6%; background: white; }
+  .owner-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; max-width: 900px; margin: 40px auto 0; }
+  .owner-step {
+    text-align: center; padding: 28px 20px;
+    background: var(--light); border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .owner-step-num {
+    width: 48px; height: 48px; background: var(--green); color: white;
+    border-radius: 50%; font-size: 1.1rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+  }
+  .owner-step h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+  .owner-step p { font-size: 0.8rem; color: var(--gray); line-height: 1.5; }
+
+  @media (max-width: 900px) {
+    .hero-visual { display: none; }
+    .step:not(:last-child)::after { display: none; }
+    .steps { flex-direction: column; align-items: center; }
+    nav ul { display: none; }
+    .form-layout { grid-template-columns: 1fr; }
+    .form-sidebar { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE TABS -->
+<div class="page-tabs">
+  <div class="tab-bar">
+    <div style="display:flex;align-items:center;gap:10px;margin-right:auto;padding:10px 0;">
+      <div style="width:30px;height:30px;font-size:14px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;">🏡</div>
+      <span class="logo-text" style="font-size:1.1rem;">Residence<span>CI</span></span>
+    </div>
+    <button class="tab-btn active" onclick="switchTab('locataire', this)">🔍 Je cherche un logement</button>
+    <button class="tab-btn" onclick="switchTab('proprietaire', this)">🏠 Je suis propriétaire</button>
+    <a href="#" class="nav-cta" style="margin-left:24px;font-size:0.82rem;padding:8px 16px;">📱 App</a>
+  </div>
+</div>
+
+<!-- OLD NAV HIDDEN -->
+<nav style="display:none">
+  <div class="logo">
+    <div class="logo-icon">🏡</div>
+    <div class="logo-text">Residence<span>CI</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#">Locations</a></li>
+    <li><a href="#">Résidences meublées</a></li>
+    <li><a href="#">À propos</a></li>
+  </ul>
+  <a href="#" class="nav-cta">📱 Télécharger l'app</a>
+</nav>
+
+<!-- LOCATAIRE TAB -->
+<div id="tab-locataire" class="tab-page active">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Disponible en Côte d'Ivoire
+    </div>
+    <h1>Trouvez votre <span>logement idéal</span> en un clic</h1>
+    <p>Des centaines de résidences, appartements meublés et locations disponibles à Abidjan et partout en Côte d'Ivoire. Comparez, réservez et emménagez.</p>
+
+    <div class="search-box">
+      <select class="search-select">
+        <option>📦 Location</option>
+        <option>🛋️ Meublé</option>
+      </select>
+      <input class="search-input" type="text" placeholder="Cocody, Plateau, Yopougon...">
+      <button class="search-btn">🔍 Chercher</button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Résidences listées</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Villes couvertes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Vérifiées</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING CARDS -->
+  <div class="hero-visual">
+    <div class="property-card featured">
+      <div class="card-img c1">
+        🏢
+        <div class="card-badge meuble">Meublé</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Résidence Les Palmiers</div>
+        <div class="card-location">📍 Cocody, Abidjan</div>
+        <div class="card-price">180 000 FCFA <span>/ mois</span></div>
+      </div>
+    </div>
+    <div class="property-card">
+      <div class="card-img c2" style="height:100px">🏠
+        <div class="card-badge">Location</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title" style="font-size:0.78rem">Appart F3 – Plateau</div>
+        <div class="card-price" style="font-size:0.82rem">250 000 <span>FCFA</span></div>
+      </div>
+    </div>
+    <div class="property-card">
+      <div class="card-img c3" style="height:100px">🏡</div>
+      <div class="card-body">
+        <div class="card-title" style="font-size:0.78rem">Villa – Marcory</div>
+        <div class="card-price" style="font-size:0.82rem">400 000 <span>FCFA</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-label">Pourquoi ResidenceCI ?</div>
+  <h2 class="section-title">La solution qu'il manquait</h2>
+  <p class="section-sub">Fini les recherches interminables sur WhatsApp et les groupes Facebook. Tout est centralisé, vérifié et disponible 24h/24.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Recherche intelligente</h3>
+      <p>Filtrez par quartier, prix, type de bien, nombre de pièces et bien plus. Trouvez exactement ce que vous cherchez.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✅</div>
+      <h3>Annonces vérifiées</h3>
+      <p>Chaque résidence est vérifiée par notre équipe. Pas de fausses annonces, pas d'arnaques.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Mobile & Web</h3>
+      <p>Disponible sur iOS, Android et navigateur web. Accédez à vos recherches depuis n'importe où.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Contact direct</h3>
+      <p>Contactez le propriétaire ou le gestionnaire directement depuis l'app. Rapide et sans intermédiaire.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📸</div>
+      <h3>Photos & Visites virtuelles</h3>
+      <p>Visualisez chaque logement en détail avant de vous déplacer. Gagnez du temps.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Carte interactive</h3>
+      <p>Visualisez tous les logements sur une carte. Trouvez ce qui est proche de votre bureau ou école.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="section-label">Simple & Rapide</div>
+  <h2 class="section-title">Comment ça marche ?</h2>
+  <p class="section-sub">Trouver un logement ne devrait pas prendre des semaines.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Cherchez</h4>
+      <p>Entrez votre quartier, votre budget et vos critères.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Comparez</h4>
+      <p>Parcourez les résidences avec photos et détails complets.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>Contactez</h4>
+      <p>Appelez ou chattez directement avec le propriétaire.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>Emménagez</h4>
+      <p>Signez votre contrat et installez-vous !</p>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE LISTINGS -->
+<section class="residences">
+  <div class="section-label">Annonces récentes</div>
+  <h2 class="section-title">Logements disponibles</h2>
+  <p class="section-sub">Un aperçu de ce que vous trouverez sur ResidenceCI.</p>
+
+  <div class="listings-grid">
+    <div class="listing-card">
+      <div class="listing-img l1">
+        🏢
+        <div class="listing-badges">
+          <span class="tag tag-type">Meublé</span>
+          <span class="tag tag-avail">Disponible</span>
+        </div>
+      </div>
+      <div class="listing-body">
+        <div class="listing-name">Résidence Émeraude</div>
+        <div class="listing-loc">📍 Cocody Riviera 3, Abidjan</div>
+        <div class="listing-amenities">
+          <span class="amenity">🛏️ 2 chambres</span>
+          <span class="amenity">🚿 2 SDB</span>
+          <span class="amenity">📡 WiFi</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price">200 000 FCFA <span>/ mois</span></div>
+          <button class="book-btn">Voir détails</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="listing-card">
+      <div class="listing-img l2">
+        🏡
+        <div class="listing-badges">
+          <span class="tag tag-type">Location</span>
+          <span class="tag tag-avail">Disponible</span>
+        </div>
+      </div>
+      <div class="listing-body">
+        <div class="listing-name">Villa Bois d'Ébène</div>
+        <div class="listing-loc">📍 Marcory Zone 4, Abidjan</div>
+        <div class="listing-amenities">
+          <span class="amenity">🛏️ 3 chambres</span>
+          <span class="amenity">🚗 Garage</span>
+          <span class="amenity">🌿 Jardin</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price">450 000 FCFA <span>/ mois</span></div>
+          <button class="book-btn">Voir détails</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="listing-card">
+      <div class="listing-img l3">
+        🏠
+        <div class="listing-badges">
+          <span class="tag tag-type">Meublé</span>
+          <span class="tag tag-avail">Disponible</span>
+        </div>
+      </div>
+      <div class="listing-body">
+        <div class="listing-name">Studio Moderne Plateau</div>
+        <div class="listing-loc">📍 Plateau Centre, Abidjan</div>
+        <div class="listing-amenities">
+          <span class="amenity">🛏️ Studio</span>
+          <span class="amenity">❄️ Climatisé</span>
+          <span class="amenity">🔒 Sécurisé</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price">120 000 FCFA <span>/ mois</span></div>
+          <button class="book-btn">Voir détails</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Prêt à trouver votre <span>chez-vous</span> ?</h2>
+  <p>Rejoignez les premiers utilisateurs et accédez en avant-première à la meilleure plateforme immobilière de Côte d'Ivoire.</p>
+  <div class="cta-buttons">
+    <a href="#" class="btn-primary">📱 Télécharger l'app</a>
+    <a href="#" class="btn-secondary">🌐 Accéder au site</a>
+  </div>
+</section>
+
+<!-- FOOTER (locataire) -->
+<footer>
+  <div class="footer-logo">
+    <div class="logo">
+      <div class="logo-icon">🏡</div>
+      <div class="logo-text">Residence<span>CI</span></div>
+    </div>
+  </div>
+  <p>© 2025 ResidenceCI – La Côte d'Ivoire trouve son logement ici.</p>
+  <p style="color:rgba(255,255,255,0.25)">Made with ❤️ à Abidjan</p>
+</footer>
+
+</div><!-- /tab-locataire -->
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--          ONGLET PROPRIÉTAIRE               -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-proprietaire" class="tab-page">
+
+  <!-- Hero propriétaire -->
+  <section class="owner-hero">
+    <div class="owner-hero-content">
+      <div class="hero-badge" style="margin-bottom:20px;">
+        <span class="badge-dot"></span> Espace Propriétaires
+      </div>
+      <h1>Publiez votre bien,<br><span>trouvez vos locataires</span></h1>
+      <p>Renseignez votre résidence ou maison en quelques minutes. Des milliers de chercheurs de logement vous attendent sur ResidenceCI.</p>
+      <div class="owner-perks">
+        <div class="perk"><div class="perk-icon">⚡</div><div class="perk-text">Publication en 5 min</div></div>
+        <div class="perk"><div class="perk-icon">👁️</div><div class="perk-text">Visibilité maximale</div></div>
+        <div class="perk"><div class="perk-icon">🆓</div><div class="perk-text">Gratuit pour commencer</div></div>
+        <div class="perk"><div class="perk-icon">📊</div><div class="perk-text">Tableau de bord inclus</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comment ça marche (propriétaire) -->
+  <section class="owner-how">
+    <div class="section-label">Simple & Rapide</div>
+    <h2 class="section-title">Comment publier votre annonce ?</h2>
+    <div class="owner-steps">
+      <div class="owner-step">
+        <div class="owner-step-num">1</div>
+        <h4>Créez votre compte</h4>
+        <p>Inscrivez-vous gratuitement en tant que propriétaire ou gestionnaire.</p>
+      </div>
+      <div class="owner-step">
+        <div class="owner-step-num">2</div>
+        <h4>Décrivez votre bien</h4>
+        <p>Renseignez les infos, photos, prix et conditions en quelques clics.</p>
+      </div>
+      <div class="owner-step">
+        <div class="owner-step-num">3</div>
+        <h4>Publication & Validation</h4>
+        <p>Notre équipe vérifie et publie votre annonce sous 24h.</p>
+      </div>
+      <div class="owner-step">
+        <div class="owner-step-num">4</div>
+        <h4>Recevez des contacts</h4>
+        <p>Les locataires vous contactent directement via l'app.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM SECTION -->
+  <section class="owner-form-section">
+    <div class="form-layout">
+
+      <!-- MAIN FORM -->
+      <div class="form-card">
+        <h2>📋 Publier votre bien</h2>
+        <p>Remplissez les informations ci-dessous pour créer votre annonce.</p>
+
+        <!-- Steps indicator -->
+        <div class="form-steps-indicator">
+          <div class="fsi-step active" id="fsi-1">
+            <div class="fsi-num">1</div>
+            <div class="fsi-label">Infos générales</div>
+          </div>
+          <div class="fsi-step" id="fsi-2">
+            <div class="fsi-num">2</div>
+            <div class="fsi-label">Localisation</div>
+          </div>
+          <div class="fsi-step" id="fsi-3">
+            <div class="fsi-num">3</div>
+            <div class="fsi-label">Photos & Prix</div>
+          </div>
+          <div class="fsi-step" id="fsi-4">
+            <div class="fsi-num">4</div>
+            <div class="fsi-label">Conditions</div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 1 : Infos générales -->
+        <div class="form-step-content active" id="step-1">
+          <div class="form-group">
+            <label>Nom du bien / résidence <span>*</span></label>
+            <input type="text" class="form-control" placeholder="Ex : Résidence Les Palmiers, Villa Mon Repos…">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Type de bien <span>*</span></label>
+              <select class="form-control">
+                <option value="">Sélectionner…</option>
+                <option>Appartement meublé</option>
+                <option>Appartement vide</option>
+                <option>Studio meublé</option>
+                <option>Villa / Maison</option>
+                <option>Résidence entière</option>
+                <option>Chambre meublée</option>
+                <option>Duplex</option>
+                <option>Bureau / Commerce</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Statut de disponibilité <span>*</span></label>
+              <select class="form-control">
+                <option>Disponible maintenant</option>
+                <option>Disponible dans 1 mois</option>
+                <option>Disponible dans 3 mois</option>
+                <option>Indisponible temporairement</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre de chambres <span>*</span></label>
+              <select class="form-control">
+                <option>Studio</option>
+                <option>1 chambre</option>
+                <option>2 chambres</option>
+                <option>3 chambres</option>
+                <option>4 chambres</option>
+                <option>5 chambres et plus</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre de salles de bain</label>
+              <select class="form-control">
+                <option>1 SDB</option>
+                <option>2 SDB</option>
+                <option>3 SDB</option>
+                <option>4 SDB et plus</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description du bien</label>
+            <textarea class="form-control" placeholder="Décrivez votre bien : environnement, points forts, particularités…"></textarea>
+          </div>
+          <!-- Équipements -->
+          <div class="form-group">
+            <label>Équipements disponibles</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox"> 📡 WiFi</label>
+              <label class="checkbox-item"><input type="checkbox"> ❄️ Climatisation</label>
+              <label class="checkbox-item"><input type="checkbox"> 🔒 Gardiennage</label>
+              <label class="checkbox-item"><input type="checkbox"> 🚗 Parking</label>
+              <label class="checkbox-item"><input type="checkbox"> 🏊 Piscine</label>
+              <label class="checkbox-item"><input type="checkbox"> 🌿 Jardin</label>
+              <label class="checkbox-item"><input type="checkbox"> ⚡ Groupe électrogène</label>
+              <label class="checkbox-item"><input type="checkbox"> 🛡️ Caméras de sécurité</label>
+              <label class="checkbox-item"><input type="checkbox"> 🧺 Buanderie</label>
+            </div>
+          </div>
+          <div class="form-nav">
+            <span></span>
+            <button class="btn-next" onclick="goToStep(2)">Suivant → Localisation</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 : Localisation -->
+        <div class="form-step-content" id="step-2">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ville <span>*</span></label>
+              <select class="form-control">
+                <option value="">Sélectionner…</option>
+                <option>Abidjan</option>
+                <option>Bouaké</option>
+                <option>Daloa</option>
+                <option>Korhogo</option>
+                <option>San-Pédro</option>
+                <option>Yamoussoukro</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Commune / Quartier <span>*</span></label>
+              <select class="form-control">
+                <option value="">Sélectionner…</option>
+                <option>Cocody</option>
+                <option>Plateau</option>
+                <option>Marcory</option>
+                <option>Treichville</option>
+                <option>Yopougon</option>
+                <option>Adjamé</option>
+                <option>Abobo</option>
+                <option>Bingerville</option>
+                <option>Koumassi</option>
+                <option>Port-Bouët</option>
+                <option>Riviera</option>
+                <option>Deux-Plateaux</option>
+                <option>Autre</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Adresse précise</label>
+            <input type="text" class="form-control" placeholder="Ex : Rue des Jardins, face à la pharmacie Sainte-Marie…">
+          </div>
+          <div class="form-group">
+            <label>Repères / Points de référence</label>
+            <input type="text" class="form-control" placeholder="Ex : Proche du CHU de Cocody, à 5 min du Palais de Justice…">
+          </div>
+          <div class="form-group">
+            <label>Lien Google Maps (optionnel)</label>
+            <input type="url" class="form-control" placeholder="https://maps.google.com/...">
+          </div>
+          <div class="form-group">
+            <label>Environnement proche</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox"> 🏫 Écoles</label>
+              <label class="checkbox-item"><input type="checkbox"> 🏥 Hôpital</label>
+              <label class="checkbox-item"><input type="checkbox"> 🛒 Supermarché</label>
+              <label class="checkbox-item"><input type="checkbox"> 🚌 Transport</label>
+              <label class="checkbox-item"><input type="checkbox"> 🏦 Banque</label>
+              <label class="checkbox-item"><input type="checkbox"> 🍽️ Restaurants</label>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="goToStep(1)">← Retour</button>
+            <button class="btn-next" onclick="goToStep(3)">Suivant → Photos & Prix</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3 : Photos & Prix -->
+        <div class="form-step-content" id="step-3">
+          <div class="form-group">
+            <label>Photos du bien <span>*</span> <span style="color:var(--gray);font-weight:400">(min. 3 photos recommandées)</span></label>
+            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+              <div class="upload-icon">📸</div>
+              <p><strong>Cliquez pour ajouter des photos</strong><br>ou glissez-déposez vos images ici</p>
+              <p style="font-size:0.75rem;margin-top:8px;color:#bbb">JPG, PNG – max 10 Mo par photo</p>
+            </div>
+            <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="previewPhotos(this)">
+            <div class="photo-preview" id="photoPreview">
+              <div class="preview-placeholder" onclick="document.getElementById('photoInput').click()">+</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prix de location mensuel (FCFA) <span>*</span></label>
+              <input type="number" class="form-control" placeholder="Ex : 150000">
+            </div>
+            <div class="form-group">
+              <label>Période de location <span>*</span></label>
+              <select class="form-control">
+                <option>Mensuel</option>
+                <option>Journalier</option>
+                <option>Hebdomadaire</option>
+                <option>Annuel</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Caution / Avance (mois)</label>
+              <select class="form-control">
+                <option>Aucune</option>
+                <option>1 mois</option>
+                <option>2 mois</option>
+                <option>3 mois</option>
+                <option>6 mois</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Charges incluses ?</label>
+              <select class="form-control">
+                <option>Non, charges en sus</option>
+                <option>Oui, tout inclus</option>
+                <option>Eau incluse</option>
+                <option>Électricité incluse</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="goToStep(2)">← Retour</button>
+            <button class="btn-next" onclick="goToStep(4)">Suivant → Conditions</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 : Conditions & Contact -->
+        <div class="form-step-content" id="step-4">
+          <div class="form-group">
+            <label>Conditions de location</label>
+            <textarea class="form-control" placeholder="Ex : Pas d'animaux, non-fumeur, caution 2 mois, paiement trimestriel…"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Profil locataire recherché</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox"> 👨‍💼 Professionnel</label>
+              <label class="checkbox-item"><input type="checkbox"> 👨‍👩‍👧 Famille</label>
+              <label class="checkbox-item"><input type="checkbox"> 🎓 Étudiant</label>
+              <label class="checkbox-item"><input type="checkbox"> 👤 Célibataire</label>
+              <label class="checkbox-item"><input type="checkbox"> 🌍 Expatrié</label>
+              <label class="checkbox-item"><input type="checkbox"> 🏢 Entreprise</label>
+            </div>
+          </div>
+          <hr style="border:none;border-top:1px solid #f0f0f0;margin:24px 0;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;">👤 Vos informations de contact</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prénom & Nom <span>*</span></label>
+              <input type="text" class="form-control" placeholder="Kouassi Jean">
+            </div>
+            <div class="form-group">
+              <label>Téléphone <span>*</span></label>
+              <input type="tel" class="form-control" placeholder="+225 07 00 00 00 00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email <span>*</span></label>
+            <input type="email" class="form-control" placeholder="proprietaire@email.com">
+          </div>
+          <div class="form-group">
+            <label>Vous êtes…</label>
+            <select class="form-control">
+              <option>Propriétaire direct</option>
+              <option>Gestionnaire / Régisseur</option>
+              <option>Agence immobilière</option>
+              <option>Mandataire</option>
+            </select>
+          </div>
+          <div style="background:var(--green-light);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:0.82rem;color:var(--green-dark);border-left:3px solid var(--green);">
+            ✅ En soumettant, vous acceptez que ResidenceCI vérifie votre annonce avant publication (délai : 24h max).
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="goToStep(3)">← Retour</button>
+            <button class="btn-next" onclick="submitForm()" style="background:var(--orange);">🚀 Publier mon annonce</button>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">🎉</div>
+          <h3>Annonce soumise avec succès !</h3>
+          <p>Notre équipe va vérifier votre bien et le publier sous <strong>24h</strong>. Vous recevrez une confirmation par SMS et email.</p>
+          <button class="btn-submit" style="margin-top:24px;" onclick="resetForm()">+ Publier un autre bien</button>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="form-sidebar">
+        <div class="stats-card">
+          <h4>📈 Plateforme en croissance</h4>
+          <div class="stat-row">
+            <div class="stat-box"><div class="num">2 400+</div><div class="lbl">Recherches / jour</div></div>
+            <div class="stat-box"><div class="num">500+</div><div class="lbl">Annonces actives</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-box"><div class="num">< 3j</div><div class="lbl">Délai moyen location</div></div>
+            <div class="stat-box"><div class="num">4.8⭐</div><div class="lbl">Note propriétaires</div></div>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <h4>💡 Conseils pour une bonne annonce</h4>
+          <div class="tip-item"><div class="tip-dot"></div><p>Ajoutez au moins <strong>5 photos lumineuses</strong> pour attirer plus de locataires.</p></div>
+          <div class="tip-item"><div class="tip-dot"></div><p>Une description <strong>précise et honnête</strong> réduit les faux contacts.</p></div>
+          <div class="tip-item"><div class="tip-dot"></div><p>Mentionnez les <strong>transports proches</strong> : c'est très recherché à Abidjan.</p></div>
+          <div class="tip-item"><div class="tip-dot"></div><p>Indiquez clairement <strong>les charges incluses</strong> pour éviter les malentendus.</p></div>
+        </div>
+
+        <div class="tip-card" style="background:var(--dark);color:white;">
+          <h4 style="color:white;">📞 Besoin d'aide ?</h4>
+          <div class="tip-item"><div class="tip-dot" style="background:#4DFFB4"></div><p style="color:rgba(255,255,255,0.65)">Notre équipe est disponible du lundi au samedi de 8h à 18h.</p></div>
+          <div class="tip-item"><div class="tip-dot" style="background:#4DFFB4"></div><p style="color:rgba(255,255,255,0.65)">WhatsApp : <strong style="color:#4DFFB4">+225 07 XX XX XX XX</strong></p></div>
+          <div class="tip-item"><div class="tip-dot" style="background:#4DFFB4"></div><p style="color:rgba(255,255,255,0.65)">Email : <strong style="color:#4DFFB4">pro@residenceci.ci</strong></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (propriétaire) -->
+  <footer>
+    <div class="footer-logo">
+      <div class="logo">
+        <div class="logo-icon">🏡</div>
+        <div class="logo-text">Residence<span>CI</span></div>
+      </div>
+    </div>
+    <p>© 2025 ResidenceCI – La Côte d'Ivoire trouve son logement ici.</p>
+    <p style="color:rgba(255,255,255,0.25)">Made with ❤️ à Abidjan</p>
+  </footer>
+
+</div><!-- /tab-proprietaire -->
+
+<script>
+// ── Tab switching ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Multi-step form ──
+let currentStep = 1;
+const totalSteps = 4;
+
+function goToStep(step) {
+  // hide current
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  document.getElementById('fsi-' + currentStep).classList.remove('active');
+  // mark done
+  if (step > currentStep) document.getElementById('fsi-' + currentStep).classList.add('done');
+  else document.getElementById('fsi-' + currentStep).classList.remove('done');
+
+  currentStep = step;
+  document.getElementById('step-' + currentStep).classList.add('active');
+  document.getElementById('fsi-' + currentStep).classList.add('active');
+  // scroll to form
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function submitForm() {
+  // Hide all steps
+  for (let i = 1; i <= totalSteps; i++) {
+    document.getElementById('step-' + i).classList.remove('active');
+    document.getElementById('fsi-' + i).classList.add('done');
+    document.getElementById('fsi-' + i).classList.remove('active');
+  }
+  document.getElementById('formSuccess').style.display = 'block';
+  document.querySelector('.form-steps-indicator').style.opacity = '0.3';
+}
+
+function resetForm() {
+  document.getElementById('formSuccess').style.display = 'none';
+  document.querySelector('.form-steps-indicator').style.opacity = '1';
+  for (let i = 1; i <= totalSteps; i++) {
+    document.getElementById('fsi-' + i).classList.remove('done', 'active');
+  }
+  currentStep = 1;
+  document.getElementById('step-1').classList.add('active');
+  document.getElementById('fsi-1').classList.add('active');
+}
+
+// ── Photo preview ──
+function previewPhotos(input) {
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '<div class="preview-placeholder" onclick="document.getElementById(\'photoInput\').click()">+</div>';
+  Array.from(input.files).slice(0, 8).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.className = 'preview-img';
+      preview.insertBefore(img, preview.firstChild);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Checkbox highlight ──
+document.addEventListener('change', e => {
+  if (e.target.type === 'checkbox') {
+    const item = e.target.closest('.checkbox-item');
+    if (item) item.classList.toggle('checked', e.target.checked);
+  }
+});
+</script>
+
+</body>
+</html>
